@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -18,9 +20,12 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon } from "@/components/icons";
+import { useAuth } from "@/app/lib/api/auth";
+import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
-  
+  const pathname = usePathname();
+  const { logout } = useAuth()
 
   const searchInput = (
     <Input
@@ -48,11 +53,12 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           {/* <NextLink className="flex gap-1 justify-start items-center" href="/"> */}
-            <p className="font-bold text-inherit">Fetch</p>
+          <p className="font-bold text-inherit">Fetch</p>
           {/* </NextLink> */}
         </NavbarBrand>
         <ul className="hidden gap-4 justify-start ml-2 lg:flex">
-          {siteConfig.navItems.map((item) => (
+          {pathname != "/" && siteConfig.navItems.map((item) => (
+
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
@@ -77,18 +83,21 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
-        <NavbarItem className="hidden md:flex">
-          <Button
-            className="text-sm font-normal text-default-600 bg-default-100"
-            color="primary"
-            variant="solid"
+        {pathname != "/" &&
+          <NavbarItem className="hidden md:flex">
+            <Button
+              className="text-sm font-normal text-default-600 bg-default-100"
+              color="primary"
+              variant="solid"
+              onPress={logout}
             // isExternal
             // href={siteConfig.links.sponsor}
             // as={Link}
-          >
-            Log Out
-          </Button>
-        </NavbarItem>
+            >
+              Log Out
+            </Button>
+          </NavbarItem>
+        }
       </NavbarContent>
 
       <NavbarContent className="pl-4 sm:hidden basis-1" justify="end">
